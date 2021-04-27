@@ -1,9 +1,9 @@
+from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
 
-from users.permissions import IsAdminOrReadOnly
-
+from ..users.permissions import IsAdminOrReadOnly
 from .filters import TitlesFilter
 from .models import Category, Genre, Title
 from .serializers import (CategorySerializer, GenreSerializer, TitleSerializer,
@@ -11,7 +11,7 @@ from .serializers import (CategorySerializer, GenreSerializer, TitleSerializer,
 
 
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.all().annotate(Avg('reviews__score'))
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitlesFilter

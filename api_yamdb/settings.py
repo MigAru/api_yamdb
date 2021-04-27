@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
-    'users',
-    'api',
+    'microservices.users',
+    'microservices.reviews',
+    'microservices.titles',
 ]
 
 AUTH_USER_MODEL = 'users.User'
