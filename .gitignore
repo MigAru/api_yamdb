@@ -150,4 +150,7 @@ media/
 data/
 */migrations/
 sent_emails/
+**/migrations/
+**/**/migrations/
+migrations/
 

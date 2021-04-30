@@ -1,7 +1,6 @@
 from django.db.models import Avg
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status, viewsets
-from rest_framework.response import Response
+from rest_framework import filters, mixins, viewsets
 
 from ..users.permissions import IsAdminOrReadOnly
 from .filters import TitlesFilter
@@ -10,8 +9,14 @@ from .serializers import (CategorySerializer, GenreSerializer, TitleSerializer,
                           TitleSerializerOnePost)
 
 
+class CustomViewset(mixins.CreateModelMixin,
+                    mixins.ListModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
+    pass
+
+
 class TitleViewSet(viewsets.ModelViewSet):
-    queryset = Title.objects.all().annotate(Avg('reviews__score'))
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [DjangoFilterBackend]
     filterset_class = TitlesFilter
@@ -22,8 +27,11 @@ class TitleViewSet(viewsets.ModelViewSet):
             return TitleSerializerOnePost
         return TitleSerializer
 
+    def get_queryset(self):
+        return Title.objects.all().annotate(rating=Avg('reviews__score'))
 
-class GenreViewSet(viewsets.ModelViewSet):
+
+class GenreViewSet(CustomViewset):
     queryset = Genre.objects.all()
     lookup_field = 'slug'
     serializer_class = GenreSerializer
@@ -31,23 +39,11 @@ class GenreViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ('name',)
 
-    def retrieve(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-    def update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-
-class CategoriesViewSet(viewsets.ModelViewSet):
+class CategoriesViewSet(CustomViewset):
     queryset = Category.objects.all()
     lookup_field = 'slug'
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [filters.SearchFilter]
     search_fields = ('name',)
-
-    def retrieve(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def update(self, request, *args, **kwargs):
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)

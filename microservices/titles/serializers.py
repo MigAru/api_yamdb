@@ -18,10 +18,7 @@ class GenreSerializer(serializers.ModelSerializer):
 class TitleSerializer(serializers.ModelSerializer):
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
-    rating = serializers.FloatField(
-        source='reviews__score__avg',
-        read_only=True
-    )
+    rating = serializers.FloatField()
 
     class Meta:
         model = Title
