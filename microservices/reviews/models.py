@@ -35,26 +35,21 @@ class Review(models.Model):
 
     class Meta:
         ordering = ['-pub_date']
+        verbose_name_plural = 'reviews'
         constraints = [
             models.UniqueConstraint(
                 name='unique_review',
-                fields=['text', 'author']
+                fields=['text', ]
             )
         ]
 
 
 class Comment(models.Model):
-    title = models.ForeignKey(
-        Title,
-        on_delete=models.CASCADE,
-        related_name="comments",
-        null=False
-    )
     author = models.ForeignKey(
         User, on_delete=models.CASCADE,
         related_name='comments'
     )
-    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
     text = models.TextField()
     pub_date = models.DateTimeField(
         'date published',
@@ -67,3 +62,4 @@ class Comment(models.Model):
 
     class Meta:
         ordering = ['-pub_date']
+        verbose_name_plural = 'comments'
