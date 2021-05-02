@@ -13,3 +13,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     role = models.CharField(max_length=255, choices=UserRoles.choices,
                             default=UserRoles.USER)
+
+    class Meta:
+        ordering = ['id']

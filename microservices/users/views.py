@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
@@ -21,17 +22,17 @@ def get_confirmation_code(request):
     )
     if serializer.is_valid(raise_exception=True):
         email = serializer.validated_data.get('email')
-        if not User.objects.filter(email=email).exists():
-            username = email.split('@')[0]
-            user = User.objects.create(username=username, email=email)
-        else:
-            user = User.objects.filter(email=email).first()
+        username = email.split('@')[0]
+        user, created = User.objects.get_or_create(
+            username=username,
+            email=email
+        )
         code = default_token_generator.make_token(user)
         send_mail(
             subject='Your YaMDb confirmation code',
             message=f'"confirmation_code": "{code}"',
-            from_email='admin@admin.com',
-            recipient_list=[email, ],
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
             fail_silently=True
         )
         return Response(data={'email': email}, status=status.HTTP_200_OK)
