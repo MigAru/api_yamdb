@@ -1,10 +1,10 @@
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from ..titles.models import Title
 from ..users.permissions import IsModeratorOrIsAuthorOrReadOnly
-from .models import Comment, Review
+from .models import Review
 from .serializers import CommentSerializer, ReviewSerializer
 
 
