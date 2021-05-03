@@ -3,8 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from .reviews.views import CommentViewSet, ReviewViewSet
 from .titles.views import CategoriesViewSet, GenreViewSet, TitleViewSet
-from .users.views import UserViewSet, get_confirmation_code, get_token
-
+from .users.views import UserViewSet
 
 router = DefaultRouter()
 router.register('titles', TitleViewSet, basename='title')

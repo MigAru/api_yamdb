@@ -27,8 +27,10 @@ class Genre(models.Model):
 
 class Title(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название фильма')
-    year = models.PositiveIntegerField(verbose_name='год выпуска',
-                               validators=[validate_not_future_year])
+    year = models.PositiveIntegerField(
+        verbose_name='год выпуска',
+        validators=[validate_not_future_year]
+    )
     description = models.TextField(
         blank=True,
         null=True,
