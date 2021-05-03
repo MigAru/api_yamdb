@@ -5,6 +5,7 @@ from .reviews.views import CommentViewSet, ReviewViewSet
 from .titles.views import CategoriesViewSet, GenreViewSet, TitleViewSet
 from .users.views import UserViewSet, get_confirmation_code, get_token
 
+
 router = DefaultRouter()
 router.register('titles', TitleViewSet, basename='title')
 router.register('genres', GenreViewSet, basename='genre')
@@ -23,6 +24,5 @@ router.register(
 
 urlpatterns = [
     path('v1/', include(router.urls)),
-    path('v1/auth/email/', get_confirmation_code),
-    path('v1/auth/token/', get_token),
+    path('v1/', include('microservices.users.urls')),
 ]
